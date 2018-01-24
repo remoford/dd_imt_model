@@ -1,9 +1,9 @@
 function [i, xEnd, yEnd] = driftdiffusion(xStart, yStart, startI, generation)
 
-thresholdX = 200;
-thresholdY = 200;
+thresholdX = 50;
+thresholdY = 50;
 checkpoint = 0;
-diffuse_const=0.5;
+diffuse_const=1;
 X(1,startI+1) = xStart;
 Y(1,startI+1) = yStart;
 for k=1:startI

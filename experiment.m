@@ -1,33 +1,24 @@
 function mycell = experiment(inheritedX, inheritedY, startI, generation, genLimit)
     
 mycell.generation = uint16(generation);
-%mycell.begin = startI;   
 [i, X, Y] = driftdiffusion(inheritedX, inheritedY, startI, mycell.generation);
 mycell.xEnd = int16(X);
 mycell.yEnd = int16(Y);
 mycell.imt = uint16(i - startI);
-%mycell.end = i;
 
-%if rand > 0.53-0.0001*generation
-%    genLimit = 0;
-%end
-
-%percentKill = sin(generation/10)/128+0.49;
 percentKill = 0.5;
-if rand > percentKill
+if rand < percentKill
     genLimit = 0;
 end
 
-if rand < 1
+if rand < 0.1
     drawnow;
-    %disp(percentKill);
 end
 
 if generation < genLimit
-    % partition error
+    % partitioning error
     leftInheritX = mycell.xEnd*0.5;
     rightInheritX = mycell.xEnd*0.5;
-    
     leftInheritY = mycell.yEnd*0.5;
     rightInheritY = mycell.yEnd*0.5;
     

@@ -1,47 +1,52 @@
 clear;
-clf;
+close all;
+set(0,'DefaultFigureWindowStyle','docked');
 hold on;
-frame(1:1500)=250;
-plot(frame);
 
-M=[];
-D=[];
-L=[];
-R=[];
+histogram_nbins=25;
+num_starting_cells=100;
+initial_protein_lvl=25;
+generation_cap=25;
 
-% for num starting cells
-for k=1:100
-    ancestor = experiment(100,100,0,0,2);
-
-    pairs = mdpairs(ancestor);
-    sizePairs = size(pairs,2);
-    m = single(zeros(sizePairs,1));
-    d = single(zeros(sizePairs,1));
-    for i=1:sizePairs
-       m(i) = single(pairs(i).mother.imt);
-       d(i) = single(pairs(i).daughter.imt);
-    end
-    M=cat(2,m',M);
-    D=cat(2,d',D);
-
-    pairs = sspairs(ancestor);
-    r = single(zeros(sizePairs,1));
-    l = single(zeros(sizePairs,1));
-    for i=1:size(pairs,2)
-       l(i) = single(pairs(i).left.imt);
-       r(i) = single(pairs(i).right.imt);
-    end
-    L=cat(2,l',L);
-    R=cat(2,r',R);
+ancestors=[];
+for k=1:num_starting_cells
+    ancestor = experiment(initial_protein_lvl,initial_protein_lvl,0,0,generation_cap);
+    ancestors = [ancestors ancestor];
 end
 
-plot(M,D,'o','MarkerSize', 5, 'linewidth', 2, 'color', [0.5,0,0,0.5]);
-mdcorr = corr(M',D','type','Spearman')
+mycells = allcells(ancestors);
+numcells = length(mycells)
 
-plot(L,R,'*','MarkerSize', 7, 'linewidth', 1, 'color', [0,0,0.5,0.5]);
-sscorr = corr(L',R','type','Spearman')
+figure;
+imts = allimts(mycells);
+histogram(imts, histogram_nbins);
+xlabel("IMT");
+ylabel("Count");
+title("IMT Distribution");
 
+figure;
+[m, d] = mdpairs(mycells);
+%plot(m, d, 'o', 'MarkerSize', 1, 'linewidth', 2, 'color', [0.5,0,0,0.5]);
+histogram2(m,d,histogram_nbins);
+mdcorr = corr(m', d', 'type', 'Spearman');
+xlabel("Mother IMT");
+ylabel("Daughter IMT");
+title("M-D Correlation = "+string(mdcorr));
 
+figure;
+[l, r] = sspairs(mycells);
+%plot(l,r,'*','MarkerSize', 1, 'linewidth', 1, 'color', [0,0,0.5,0.5]);
+histogram2(l,r,histogram_nbins);
+sscorr = corr(l',r','type','Spearman');
+xlabel("Left sister IMT");
+ylabel("Right sister IMT");
+title("S-S Correlation = "+string(sscorr));
 
-
-
+figure;
+[imt gen] = imtvsgen(mycells);
+%plot(gen, imt,'*');
+histogram2(gen, imt,histogram_nbins);
+gencorr = corr(double(gen)',double(imt)','type','Spearman');
+ylabel("IMT");
+xlabel("Generation");
+title("IMT-Generation Correlation = "+string(gencorr));
