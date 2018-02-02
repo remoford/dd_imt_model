@@ -1,9 +1,9 @@
-function [i, xEnd, yEnd] = driftdiffusion(xStart, yStart, startI, generation)
+function [i, xEnd, yEnd] = driftdiffusion(xStart, yStart, startI, generation, thresholdX, thresholdY, diffuse_const)
 
-thresholdX = 50;
-thresholdY = 50;
+%thresholdX = 50;
+%thresholdY = 400;
 checkpoint = 0;
-diffuse_const=1;
+%diffuse_const=2;
 X(1,startI+1) = xStart;
 Y(1,startI+1) = yStart;
 for k=1:startI
@@ -18,11 +18,11 @@ while ~stop
     i=i+1;
     if checkpoint == 0
         X(i)= X(i-1) + diffuse_const + round(1*normrnd(0,1));
-        Y(i)= Y(i-1) + round(normrnd(0,1));
+        Y(i)= Y(i-1) + round(0.25*normrnd(0,1));
     end
     if checkpoint == 1
-        X(i)= X(i-1) + round(normrnd(0,1));
-        Y(i)= Y(i-1) + diffuse_const + round(1*normrnd(0,1));
+        X(i)= X(i-1) + round(1*normrnd(0,1));
+        Y(i)= Y(i-1) + 0.5*diffuse_const + round(0.25*normrnd(0,1));
     end
     
     if checkpoint == 0 && X(i) > thresholdX

@@ -4,7 +4,7 @@ descendants = [];
 for k=1:length(ancestors)
     ancestor = ancestors(k);
     
-    if ancestor.generation > 4 % censor start of experiment noise
+    if ancestor.generation > 1 % censor start of experiment noise
         descendants = [descendants ancestor];
     end
     

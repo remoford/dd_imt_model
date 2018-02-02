@@ -5,12 +5,16 @@ hold on;
 
 histogram_nbins=25;
 num_starting_cells=100;
-initial_protein_lvl=25;
-generation_cap=25;
+initial_protein_lvl_1=0;
+initial_protein_lvl_2=0;
+generation_cap=5;
+thresholdX=50;
+thresholdY=50;
+diffuse_const=1;
 
 ancestors=[];
 for k=1:num_starting_cells
-    ancestor = experiment(initial_protein_lvl,initial_protein_lvl,0,0,generation_cap);
+    ancestor = experiment(initial_protein_lvl_1, initial_protein_lvl_2,  0, 0, generation_cap,   thresholdX, thresholdY,diffuse_const);
     ancestors = [ancestors ancestor];
 end
 
